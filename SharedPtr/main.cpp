@@ -79,5 +79,7 @@ int main()
     SharedPtr<Person> person2 = person1;
     std::cout << person1.UseCount() << std::endl;
     std::cout << person2.UseCount() << std::endl;
-    person2 = MakeMyShared("Aleksandr", 66)
+    person2 = MakeMyShared("Aleksandr", 66);
+    std::cout << person1.UseCount() << std::endl;
+    std::cout << person2.UseCount() << std::endl;
 }

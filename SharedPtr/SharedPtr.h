@@ -21,7 +21,7 @@ public:
 	SharedPtr();
 	SharedPtr(T* pointer, bool isArray, std::vector<SharedPtr*> allSharedPtr = std::vector<SharedPtr*>());
 	SharedPtr(SharedPtr& other);
-	SharedPtr(SharedPtr&& other);
+	SharedPtr(SharedPtr&& other) noexcept;
 
 	~SharedPtr();
 	
@@ -122,7 +122,7 @@ SharedPtr<T>::SharedPtr(SharedPtr& other)
 
 
 template <typename T>
-SharedPtr<T>::SharedPtr(SharedPtr&& other)
+SharedPtr<T>::SharedPtr(SharedPtr&& other) noexcept
 {
 	pointer = other.pointer;
 	isArray = other.isArray;

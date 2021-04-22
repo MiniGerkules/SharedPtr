@@ -17,7 +17,7 @@ private:
 public:
 	WeakPtr(SharedPtr<T>& source);
 	WeakPtr(const WeakPtr& source);
-	WeakPtr(WeakPtr&& source);
+	WeakPtr(WeakPtr&& source) noexcept;
 
 	WeakPtr& operator=(const WeakPtr& other);
 	WeakPtr& operator=(WeakPtr&& other);
@@ -57,7 +57,7 @@ WeakPtr<T>::WeakPtr(const WeakPtr& source)
 }
 
 template <typename T>
-WeakPtr<T>::WeakPtr(WeakPtr&& source)
+WeakPtr<T>::WeakPtr(WeakPtr&& source) noexcept
 {
 	Init(source);
 	source.pointer = nullptr;

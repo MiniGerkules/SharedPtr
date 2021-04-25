@@ -54,16 +54,16 @@ int main()
     std::cout << smartPointer5.UseCount() << std::endl;
     std::cout << smartPointer6.UseCount() << std::endl;
     std::cout << smartPointer7.UseCount() << std::endl;
-
+    
     // WeakPtr tests
     std::cout << "\nWeakPtr tests" << std::endl;
     WeakPtr<int> weakPointer1(smartPointer7);
     std::cout << smartPointer7.UseCount() << std::endl;
-
+    
     std::cout << std::endl;
     SharedPtr<int> smartPointer8 = weakPointer1.Lock();
     std::cout << smartPointer8.UseCount() << std::endl;
-
+ 
     std::cout << std::endl;
     std::cout << smartPointer1.UseCount() << std::endl;
     WeakPtr<int> weakPointer2(smartPointer1);
@@ -71,7 +71,7 @@ int main()
     std::cout << smartPointer1.UseCount() << std::endl;
     WeakPtr<int> weakPointer3 = std::move(weakPointer1);
     std::cout << smartPointer8.UseCount() << std::endl;
-
+    
     // MakeMyShared tests
     std::cout << "\nMakeMyShared tests" << std::endl;
     SharedPtr<Person> person1 = MakeMyShared("Vladimir", 68);

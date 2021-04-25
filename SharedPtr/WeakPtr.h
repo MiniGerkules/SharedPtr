@@ -8,14 +8,15 @@ class WeakPtr
 {
 private:
 	T* pointer;
-	std::vector<SharedPtr<T>*> allSharedPtr;
+	size_t* counter;
 	bool isArray;
 
 
 	void Init(const WeakPtr& source);
+	void Init(const SharedPtr<T>& source);
 
 public:
-	WeakPtr(SharedPtr<T>& source);
+	WeakPtr(const SharedPtr<T>& source);
 	WeakPtr(const WeakPtr& source);
 	WeakPtr(WeakPtr&& source) noexcept;
 
@@ -36,24 +37,30 @@ void WeakPtr<T>::Init(const WeakPtr& source)
 {
 	pointer = source.pointer;
 	isArray = source.isArray;
-	allSharedPtr.insert(allSharedPtr.end(), source.allSharedPtr.begin(), source.allSharedPtr.end());
+	counter = source.counter;
+}
+
+template <typename T>
+void WeakPtr<T>::Init(const SharedPtr<T>& source)
+{
+	pointer = source.Get();
+	isArray = source.GetIsArray();
+	counter = source.GetCounter();
 }
 
 
 // Public methods
 
 template <typename T>
-WeakPtr<T>::WeakPtr(SharedPtr<T>& source)
-	: pointer(source.Get()), isArray(source.GetIsArray())
+WeakPtr<T>::WeakPtr(const SharedPtr<T>& source) 
 {
-	allSharedPtr.insert(allSharedPtr.end(), source.GetAllSharedPtr().begin(), source.GetAllSharedPtr().end());
+	Init(source);
 }
 
 template <typename T>
 WeakPtr<T>::WeakPtr(const WeakPtr& source)
-	: pointer(source.pointer), isArray(source.isArray)
 {
-	allSharedPtr.insert(allSharedPtr.end(), source.allSharedPtr.begin(), source.allSharedPtr.end());
+	Init(source);
 }
 
 template <typename T>
@@ -62,17 +69,14 @@ WeakPtr<T>::WeakPtr(WeakPtr&& source) noexcept
 	Init(source);
 	source.pointer = nullptr;
 	source.isArray = false;
-	source.allSharedPtr.clear();
+	source.counter = nullptr;
 }
 
 template <typename T>
 WeakPtr<T>& WeakPtr<T>::operator=(const WeakPtr& other)
 {
 	if (&other != this)
-	{
-		allSharedPtr.clear();
 		Init(other);
-	}
 
 	return *this;
 }
@@ -85,7 +89,7 @@ WeakPtr<T>& WeakPtr<T>::operator=(WeakPtr&& other)
 		Init(other);
 		other.pointer = nullptr;
 		other.isArray = false;
-		other.allSharedPtr.clear();
+		other.counter = nullptr;
 	}
 
 	return *this;
@@ -94,5 +98,5 @@ WeakPtr<T>& WeakPtr<T>::operator=(WeakPtr&& other)
 template <typename T>
 SharedPtr<T> WeakPtr<T>::Lock()
 {
-	return SharedPtr<T> { pointer, isArray, allSharedPtr };
+	return SharedPtr<T> { pointer, isArray, counter };
 }
